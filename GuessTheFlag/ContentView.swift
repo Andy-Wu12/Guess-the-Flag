@@ -18,7 +18,7 @@ struct ContentView: View {
         ZStack {
             RadialGradient(stops: [
                 Gradient.Stop(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
-                Gradient.Stop(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.3)
+                Gradient.Stop(color: Color(red: 0.76, green: 0.15, blue: 0.26), location: 0.5)
             ], center: .top, startRadius: 200, endRadius: 700)
             .ignoresSafeArea()
             VStack {
@@ -67,7 +67,7 @@ struct ContentView: View {
             scoreTitle = "Correct"
             score += 1
         } else {
-            scoreTitle = "Wrong"
+            scoreTitle = "Incorrect. That is the flag of \(countries[number])"
         }
         
         showingScore = true
