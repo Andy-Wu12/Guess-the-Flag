@@ -14,6 +14,10 @@ struct ContentView: View {
     @State var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State var correctAnswer = Int.random(in: 0...2)
     
+    @State private var roundsPlayed = 0
+    @State private var gameOver = false
+    private let maxRounds = 10
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -55,10 +59,17 @@ struct ContentView: View {
                     .font(.title.bold())
                 Spacer()
             } .padding()
-        } .alert(scoreTitle, isPresented: $showingScore) {
+        }
+        .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
             Text("Your score is \(score)")
+        }
+
+        .alert("Game Over", isPresented: $gameOver) {
+            Button("Restart", action: reset)
+        } message: {
+            Text("Your score was \(score) / \(maxRounds)")
         }
     }
     
@@ -69,8 +80,23 @@ struct ContentView: View {
         } else {
             scoreTitle = "Incorrect. That is the flag of \(countries[number])"
         }
-        
         showingScore = true
+        addRoundPlayed()
+    }
+    
+    func addRoundPlayed() {
+        roundsPlayed += 1
+        if roundsPlayed == maxRounds {
+            showingScore = false // Prevents score update pop up if game is over
+            gameOver = true
+        }
+    }
+    
+    func reset() {
+        roundsPlayed = 0
+        score = 0
+        gameOver = false
+        askQuestion()
     }
     
     func askQuestion() {
