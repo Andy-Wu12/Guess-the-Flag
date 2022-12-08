@@ -42,10 +42,7 @@ struct ContentView: View {
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(Capsule())
-                                .shadow(radius: 20)
+                            FlagImage(countryName: countries[number])
                         }
                     }
                 } .frame(maxWidth: .infinity)
@@ -102,6 +99,19 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+    }
+}
+
+/// ViewsAndModifiers Challenge 2 - replace Image view used for flags
+/// with a new FlagImage() view that renders one flag image using the specific set of modifiers we had
+struct FlagImage: View {
+    var countryName: String
+    
+    var body: some View {
+        Image(countryName)
+            .renderingMode(.original)
+            .clipShape(Capsule())
+            .shadow(radius: 20)
     }
 }
 
