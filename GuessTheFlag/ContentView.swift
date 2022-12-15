@@ -11,6 +11,7 @@ let numFlags = 3
 
 struct ContentView: View {
     // Animations
+    @State private var guessed = false
     @State private var rotationAmount = Array(repeating: 0.0, count: numFlags)
     @State private var opacityLevel = Array(repeating: 1.0, count: numFlags)
     
@@ -55,6 +56,8 @@ struct ContentView: View {
                             axis: (x: 0, y: 1, z: 0)
                         )
                         .opacity(opacityLevel[number])
+                        .shadow(color: guessed ? (number == correctAnswer ? .green : .red) : .clear,
+                                radius: 5)
                     }
                 } .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
@@ -86,11 +89,12 @@ struct ContentView: View {
             rotationAmount[number] += 360
             for i in 0..<numFlags {
                 if i != number {
-                    opacityLevel[i] = 0.25
+                    opacityLevel[i] = 0.50
                 }
             }
         }
         
+        guessed = true
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
@@ -123,6 +127,7 @@ struct ContentView: View {
         correctAnswer = Int.random(in: 0...2)
         // Reset opacity levels before asking next question
         opacityLevel = Array(repeating: 1.0, count: numFlags)
+        guessed = false
     }
 }
 
