@@ -46,7 +46,9 @@ struct ContentView: View {
                     }
                     ForEach(0..<3) { number in
                         Button {
-                            flagTapped(number)
+                            if !guessed {
+                                flagTapped(number)
+                            }
                         } label: {
                             FlagImage(countryName: countries[number])
                         }
