@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    // Animations
+    @State private var rotationAmount = Array(repeating: 0.0, count: 3)
+    
     @State private var showingScore = false
     @State private var score = 0
     @State private var scoreTitle = ""
@@ -44,6 +47,10 @@ struct ContentView: View {
                         } label: {
                             FlagImage(countryName: countries[number])
                         }
+                        .rotation3DEffect(
+                            .degrees(rotationAmount[number]),
+                            axis: (x: 0, y: 1, z: 0)
+                        )
                     }
                 } .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
@@ -71,6 +78,10 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        withAnimation {
+            rotationAmount[number] += 360
+        }
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
             score += 1
@@ -79,6 +90,7 @@ struct ContentView: View {
         }
         showingScore = true
         addRoundPlayed()
+        rotationAmount[number] = 0
     }
     
     func addRoundPlayed() {
