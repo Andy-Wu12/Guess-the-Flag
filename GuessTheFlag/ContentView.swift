@@ -7,9 +7,12 @@
 
 import SwiftUI
 
+let numFlags = 3
+
 struct ContentView: View {
     // Animations
-    @State private var rotationAmount = Array(repeating: 0.0, count: 3)
+    @State private var rotationAmount = Array(repeating: 0.0, count: numFlags)
+    @State private var opacityLevel = Array(repeating: 1.0, count: numFlags)
     
     @State private var showingScore = false
     @State private var score = 0
@@ -51,6 +54,7 @@ struct ContentView: View {
                             .degrees(rotationAmount[number]),
                             axis: (x: 0, y: 1, z: 0)
                         )
+                        .opacity(opacityLevel[number])
                     }
                 } .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
@@ -80,6 +84,11 @@ struct ContentView: View {
     func flagTapped(_ number: Int) {
         withAnimation {
             rotationAmount[number] += 360
+            for i in 0..<numFlags {
+                if i != number {
+                    opacityLevel[i] = 0.25
+                }
+            }
         }
         
         if number == correctAnswer {
@@ -90,6 +99,7 @@ struct ContentView: View {
         }
         showingScore = true
         addRoundPlayed()
+        // Reset animation values
         rotationAmount[number] = 0
     }
     
@@ -111,6 +121,8 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        // Reset opacity levels before asking next question
+        opacityLevel = Array(repeating: 1.0, count: numFlags)
     }
 }
 
