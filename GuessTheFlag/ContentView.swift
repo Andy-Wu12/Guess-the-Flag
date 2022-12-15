@@ -15,9 +15,8 @@ struct ContentView: View {
     @State private var rotationAmount = Array(repeating: 0.0, count: numFlags)
     @State private var opacityLevel = Array(repeating: 1.0, count: numFlags)
     
-    @State private var showingScore = false
     @State private var score = 0
-    @State private var scoreTitle = ""
+
     @State var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US", "Argentina", "Brazil", "Canada", "Columbia", "Greece", "Japan", "Monaco", "South Korea", "Switzerland", "Ukraine"].shuffled()
     @State var correctAnswer = Int.random(in: 0...2)
     
@@ -64,19 +63,19 @@ struct ContentView: View {
                     .background(.regularMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 Spacer()
+                if guessed {
+                    Button("Continue", action: askQuestion)
+                        .foregroundColor(.black)
+                        .font(.title.bold())
+                }
                 Spacer()
                 Text("Score: \(score)")
                     .foregroundColor(.white)
                     .font(.title.bold())
                 Spacer()
             } .padding()
+            
         }
-        .alert(scoreTitle, isPresented: $showingScore) {
-            Button("Continue", action: askQuestion)
-        } message: {
-            Text("Your score is \(score)")
-        }
-
         .alert("Game Over", isPresented: $gameOver) {
             Button("Restart", action: reset)
         } message: {
@@ -96,12 +95,9 @@ struct ContentView: View {
         
         guessed = true
         if number == correctAnswer {
-            scoreTitle = "Correct"
             score += 1
-        } else {
-            scoreTitle = "Incorrect. That is the flag of \(countries[number])"
         }
-        showingScore = true
+    
         addRoundPlayed()
         // Reset animation values
         rotationAmount[number] = 0
@@ -110,7 +106,6 @@ struct ContentView: View {
     func addRoundPlayed() {
         roundsPlayed += 1
         if roundsPlayed == maxRounds {
-            showingScore = false // Prevents score update pop up if game is over
             gameOver = true
         }
     }
